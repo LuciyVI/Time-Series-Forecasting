@@ -10,6 +10,7 @@
 double epsil = 0.01;
 
 double linearActivation(double x) {
+
     return 0.5*cos(0.5*x)-0.5;
 }
 
@@ -19,9 +20,10 @@ double net(Eigen::VectorXd weights, Eigen::VectorXd inputs, int len_window){
 
     double net = 0.0;
     
-    for(int i=1 ;i<len_window;++i){
-        net += weights(i)*inputs(i-1);
-    }
+        for(int i=1 ;i<len_window;++i){
+            net += weights(i)*inputs(i-1);
+        }
+    
     return net;
 
 }
@@ -78,7 +80,7 @@ int main() {
     double a = -5.0;
     double b = 5.0;
     
-    int len_window = 4;
+    int len_window = 6;
 
     Eigen::VectorXd wights(len_window);
     Eigen::VectorXd right_vector(number_points);
@@ -90,34 +92,39 @@ int main() {
     
     do{
         
+     
         input(count-1)=a+(count-1)*(b-a)/number_points;
         right_vector(count-1)=linearActivation(input(count-1));
-        input(input.size()-count)=b+count*(b-a)/number_points;
-        new_answer(count-1)=linearActivation(input(input.size()-count));
+        input((((input.size()-2)/2)+count))=(b+(count-1))*((b-a)/number_points);
+        new_answer(count-1)=linearActivation(input((input.size()-1)/2+count));
         count++;
         
+        
+
 
     }while(!input.all());
+        
+        std::cout<<"Right_Vector : "<<right_vector<<std::endl;
+        std::cout<<"inputs :  "<<input<<std::endl;
+        std::cout<<"new_answer :  "<<new_answer<<std::endl;
     
-    std::cout<<"Right_Vector : "<<right_vector<<std::endl;
-    std::cout<<"inputs :  "<<input<<std::endl;
     for(int i = 0; i<1000;i++){
         X(i)=a-0.5+i*(1+2*b-a)/100;
     }
     for(int i = 0; i<1000;i++){
         Y(i)=linearActivation(X(i));
     }
+    
     double sum_error = 0.0;
     double *ptr  = &sum_error;
 
-    wights<< 0,1,1,1;
+    
 
-    distribution_weights(wights,input,right_vector,len_window,number_points,*ptr);
+    // distribution_weights(wights,input,right_vector,len_window,number_points,*ptr);
 
+    // ploting_grph(4,5,Y);
 
-    ploting_grph(4,5,Y);
-
-    std::cout<<"Net:"<<net(wights,input,len_window)<<std::endl;
+    // std::cout<<"Net:"<<net(wights,input,len_window)<<std::endl;
 
     return 0;
 
