@@ -40,7 +40,7 @@ double calculate_error(double input, double right_value)
     return right_value - input;
 }
 
-void distribution_weights(Eigen::VectorXd &weights, Eigen::VectorXd input,Eigen::VectorXd right_value,int len_window , int number_points,double &sum_error)
+void distribution_weights(std::vector <double> &weights, std::vector<double> input, std::vector <double> right_value,int len_window , int number_points,double &sum_error)
    {    
     
 
@@ -48,9 +48,9 @@ void distribution_weights(Eigen::VectorXd &weights, Eigen::VectorXd input,Eigen:
         for(int i = 0; i<weights.size()-1;++i)
         {
             //TODO передать изменённые веса в main
-            double error = calculate_error(input(i),right_value(i));
-            weights(i+1)+=weights(i)*(delta_wieghts(error,input(i)));
-            std::cout<<"w : "<<weights<<std::endl;
+            double error = calculate_error(input[i],right_value[i]);
+            weights[i+1]+=weights[i]*(delta_wieghts(error,input[i]));
+            std::cout<<weights[i]<<"*"<<error<<"*"<<"0.4"<<"*"<<input[i]<<std::endl;
             
             sum_error += error*error;
             
@@ -142,7 +142,7 @@ int main() {
     ploting_grph(4,5,right_vector);
         
         std::cout<<"Sum_error : "<<sum_error<<std::endl;        
-        // distribution_weights(wights,input,right_vector,len_window,number_points,*ptr);
+        distribution_weights(wights,inputs_vector,right_vector,len_window,number_points,*ptr);
         
         // std::cout<<"Net:"<<net(wights,input,len_window)<<std::endl;
     
